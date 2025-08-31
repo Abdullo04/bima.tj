@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Виртуальное окружение
+venv/
+env/
+.env/
+.env.*
+
+# Конфигурационные файлы IDE и редакторов
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Файлы баз данных (если вы создаёте локальные файлы БД)
+*.sqlite3
+*.db
+
+# Логи
+*.log
+
+# Сборки и дистрибутивы
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Файлы миграций Alembic (если используете)
+alembic/versions/*.pyc
+alembic/versions/__pycache__/
+
+# Файлы pytest
+.cache/
+.pytest_cache/
+
+# Секретные ключи и конфиги
+secrets.json
+config.yaml
+
+# Jupyter Notebooks checkpoint
+.ipynb_checkpoints/
+
+# MacOS
+.DS_Store
