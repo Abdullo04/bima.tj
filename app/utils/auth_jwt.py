@@ -5,6 +5,11 @@ from app.config import config
 
 
 def create_token(login: str) -> str:
+    '''
+    Create JWT token
+    :param login: User login
+    :return: JWT token
+    '''
     payload = {
         "sub": login,
         "exp": int((datetime.utcnow() + timedelta(days=1)).timestamp())
