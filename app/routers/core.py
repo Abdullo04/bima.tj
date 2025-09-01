@@ -1,19 +1,17 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-from app.schemas.core import RegisterRequest, APIResponse
+from app.schemas.core import RegisterRequest, APIResponse, LoginRequest
 from app.db.base import get_session
-from app.models.core import User
-from app.utils.hasher import verify_password, hash_password
-from app.config import config
+from app.utils.auth_jwt import create_token
+from app.services.user_service import UserService
+from app.services.auth_service import AuthService
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-
 
 router = APIRouter()
 
 
-@router.post("/auth/register")
+@router.post("/auth/register", response_model=APIResponse)
 async def register_user(request: RegisterRequest, session: AsyncSession = Depends(get_session)) -> APIResponse:
     '''
     Register new user
@@ -24,28 +22,27 @@ async def register_user(request: RegisterRequest, session: AsyncSession = Depend
     if not request.password == request.confirm_password:
         raise HTTPException(status_code=400, detail="Passwords do not match")
 
-    query = select(User).where(User.login == request.login)
-    user = await session.execute(query)
-    if user.scalar_one_or_none():
+    user_created = await UserService(session).create_user(request)
+
+    if not user_created:
         raise HTTPException(status_code=400, detail="User already exists")
 
-    hashed_password = hash_password(request.password, config.password_salt)
-
-    new_user = User(
-        first_name=request.first_name,
-        last_name=request.last_name,
-        login=request.login,
-        password=hashed_password
-    )
-
-    session.add(new_user)
-    await session.commit()
     return APIResponse(success=True)
 
 
-@router.post("/auth/login")
-async def login():
+@router.post("/auth/login", response_model=APIResponse)
+async def login(request: LoginRequest, session: AsyncSession = Depends(get_session)) -> APIResponse:
     '''
-    Login user with JWT
+    Login user and get JWT token
+    :param request: LoginRequest obj
+    :param session: Async session for DB
+    :return: APIResponse obj
     '''
-    return
+    logged_in = await AuthService(session).login(request.username, request.password)
+
+    if not logged_in:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+
+    token = create_token(request.username)
+
+    return APIResponse(success=True, data={"token": token})
