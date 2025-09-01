@@ -11,6 +11,7 @@ class Config:
     db_host: str = os.getenv("DB_HOST")
     db_port: str = os.getenv("DB_PORT")
     db_name: str = os.getenv("DB_NAME")
+    password_salt: str = os.getenv("PASSWORD_SALT")
 
 
 config = Config()
