@@ -12,6 +12,8 @@ class Config:
     db_port: str = os.getenv("DB_PORT")
     db_name: str = os.getenv("DB_NAME")
     password_salt: str = os.getenv("PASSWORD_SALT")
+    jwt_secret_key: str = os.getenv("JWT_SECRET_KEY")
+    jwt_algorithm: str = os.getenv("JWT_ALGORITHM")
 
 
 config = Config()
