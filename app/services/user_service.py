@@ -28,12 +28,14 @@ class UserService:
         :param user: RegisterRequest obj
         :return: True if user created else False
         '''
-        if self.user_exists(user.username):
+        if await self.user_exists(user.username):
             return False
 
         hashed_password = hash_password(user.password, config.password_salt)
 
         new_user = User(
+            first_name=user.first_name,
+            last_name=user.last_name,
             username=user.username,
             password=hashed_password
         )
