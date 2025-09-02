@@ -43,6 +43,6 @@ async def quote(quote_id: int, session: AsyncSession = Depends(get_session)) -> 
     quote = await QuoteService(session).get_quote(quote_id)
 
     if not quote:
-        raise HTTPException(status_code=400, detail="Quote not found")
+        raise HTTPException(status_code=404, detail="Quote not found")
 
     return APIResponse(success=True, data={'id': quote_id, 'tariff': quote.tariff, 'age': quote.age, 'experience': quote.experience, 'car_type': quote.car_type, 'price': quote.price})
