@@ -4,6 +4,7 @@ from app.schemas.applications import ApplicationRequest
 from app.schemas.core import APIResponse
 from app.db.base import get_session
 from app.services.application_service import ApplicationService
+from app.utils.auth_jwt import get_current_user
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -34,6 +35,22 @@ async def application(request: ApplicationRequest, session: AsyncSession = Depen
     return APIResponse(success=True)
 
 
-@router.get("/{id}")
-async def application(id: int):
-    return
+@router.get("/{application_id}", response_model=APIResponse)
+async def application(application_id: int, session: AsyncSession = Depends(get_session), user: str = Depends(get_current_user)) -> APIResponse:
+    '''
+    Get application by id
+    :param application_id: Id of application
+    :param session: Async session for DB
+    :param user: Returns current user username
+    :return: APIResponse obj
+    '''
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    service = ApplicationService(session)
+    application = await service.get_application(application_id)
+
+    if application is None:
+        raise HTTPException(status_code=404, detail="Application not found")
+
+    return APIResponse(success=True, data={'fullname': application.full_name, 'phone_number': application.phone_number, 'email': application.email, 'tariff': application.tariff, 'quote_price': application.quote_price})

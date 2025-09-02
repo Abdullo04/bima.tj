@@ -1,4 +1,5 @@
 from app.models.applications import Applications
+from app.models.quotes import Quotes
 from app.services.quote_service import QuoteService
 from sqlalchemy import select
 
@@ -34,3 +35,15 @@ class ApplicationService:
         ))
         await self.session.commit()
         return True
+
+    async def get_application(self, application_id: int):
+        query = select(Applications, Quotes.price.label('quote_price')).where(Applications.id == application_id).join(
+            Quotes, Applications.quote == Quotes.id)
+        application = await self.session.execute(query)
+        row = application.first()
+        if not row:
+            return None
+
+        application, quote_price = row
+        application.quote_price = quote_price
+        return application
