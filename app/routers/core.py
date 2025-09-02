@@ -5,6 +5,7 @@ from app.db.base import get_session
 from app.utils.auth_jwt import create_token
 from app.services.user_service import UserService
 from app.services.auth_service import AuthService
+from app.config import config
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -43,6 +44,6 @@ async def login(request: LoginRequest, session: AsyncSession = Depends(get_sessi
     if not logged_in:
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
-    token = create_token(request.username)
+    token = create_token(request.username, config.jwt_day_expire)
 
     return APIResponse(success=True, data={"token": token})
