@@ -9,6 +9,25 @@ class QuoteService:
         self.session = session
 
     async def create_quote(self, tariff: str, age: int, experience: int, car_type: str, price: float):
+        query = select(Quotes).where(
+            Quotes.tariff == tariff,
+            Quotes.age == age,
+            Quotes.experience == experience,
+            Quotes.car_type == car_type
+        )
+        quote = await self.session.execute(query)
+        quote = quote.scalar_one_or_none()
+        if quote:
+            return False
+
+        quote = Quotes(
+            tariff=tariff,
+            age=age,
+            experience=experience,
+            car_type=car_type,
+            price=price
+        )
+
         new_quote = Quotes(
             tariff=tariff,
             age=age,

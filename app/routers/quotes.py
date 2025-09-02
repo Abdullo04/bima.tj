@@ -27,7 +27,7 @@ async def quotes(request: QuoteRequest, session: AsyncSession = Depends(get_sess
         request.tariff, request.age, request.experience, request.car_type, price)
 
     if not quote_created:
-        raise HTTPException(status_code=400, detail="Somethnig went wrong")
+        raise HTTPException(status_code=400, detail="Quote already exists")
 
     return APIResponse(success=True, data={"price": price})
 
