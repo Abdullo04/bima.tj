@@ -7,6 +7,3 @@ class QuoteRequest(BaseModel):
     age: conint(ge=18, le=100)
     experience: conint(ge=0, le=100)
     car_type: CarTypes
-
-    class Config:
-        orm_mode = True
