@@ -14,7 +14,7 @@ class Config:
     password_salt: str = os.getenv("PASSWORD_SALT")
     jwt_secret_key: str = os.getenv("JWT_SECRET_KEY")
     jwt_algorithm: str = os.getenv("JWT_ALGORITHM")
-    jwt_day_expire: int = os.getenv("JWT_DAY_EXPIRE")
+    jwt_day_expire: int = int(os.getenv("JWT_DAY_EXPIRE"))
 
 
 config = Config()
