@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from app.routers import core, quotes, applications
-from .schemas.core import APIResponse, ErrorDetail
+from app.schemas.core import APIResponse, ErrorDetail
 
 app = FastAPI()
 
