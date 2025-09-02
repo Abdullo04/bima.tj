@@ -7,6 +7,7 @@ from alembic import context
 
 from app.db.base import Base, DATABASE_URL
 from app.models.core import User
+from app.models.quotes import Quotes
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
